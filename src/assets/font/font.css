@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'DINPro-Bold';
+    src: url('DINPro-Bold.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DINPro-Light';
+    src: url('DINPro-Light.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DINPro-Medium';
+    src: url('DINPro-Medium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'FZPSCHJT';
+    src: url('FZPSCHJT.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PingFangSC-Bold';
+    src: url('PingFang Bold.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PingFangSC-Medium';
+    src: url('PingFang Medium.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PingFangSC-Regular';
+    src: url('PingFang Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
