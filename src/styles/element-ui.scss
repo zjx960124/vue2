@@ -43,6 +43,38 @@
   }
 }
 
+.el-select-dropdown {
+  background: #001926;
+  border-color: rgba(0, 0, 0, 0);
+  .el-select-dropdown__item {
+    color: #038585;
+  }
+  .el-select-dropdown__item:hover {
+    background: #014852;
+    color: #04E1E1;
+    font-weight: bold;
+  }
+  .el-select-dropdown__item.hover {
+    background: #014852;
+    color: #04E1E1;
+    font-weight: bold;
+  }
+  .el-select-dropdown__item.select {
+    color: #04E1E1 !important;
+    font-weight: bold !important;
+  }
+  .popper__arrow {
+    border-color: transparent !important;
+  }
+  .popper__arrow::after {
+    border-bottom-color: transparent !important;
+  }
+  .el-scrollbar {
+    .el-scrollbar__wrap {
+    }
+  }
+}
+
 // to fix el-date-picker css style
 .el-range-separator {
   box-sizing: content-box;
@@ -371,4 +403,100 @@
 
 .el-timeline-item__content {
   line-height: 1.5;
+}
+
+// el-date-picker
+.el-date-picker {
+  background: #001926;
+  color: #038585;
+  font-size: 11px;
+  font-family: PingFangSC-Regular;
+  box-shadow: none;
+  border-color: rgba(0, 0, 0, 0);
+  width: 242px;
+  .el-picker-panel__body-wrapper {
+    .el-picker-panel__body {
+      .el-date-picker__header--bordered {
+        border-bottom: none;
+        padding-bottom: 0;
+        .el-date-picker__header-label {
+          color: #04E1E1;
+          font-family: DIN-MEDIUM;
+        }
+        .el-picker-panel__icon-btn {
+          color: #04E1E1;
+        }
+      }
+      .el-picker-panel__content {
+        width: calc(100% - 30px);
+        .el-month-table {
+          tr {
+            height: 36px;
+          }
+          td {
+            padding: 0;
+            height: 36px;
+            & > div {
+              padding: 0;
+              height: 100%;
+            }
+            & > div:hover {
+              background: #014852;
+              .cell {
+                color: #04E1E1;
+              }
+            }
+            .cell {
+              width: auto;
+              color: #038585;
+              margin-bottom: 16px;
+              font-family: PingFangSC-Regular;
+            }
+          }
+          td.current {
+            div {
+              .cell {
+                color: #04E1E1 !important;
+                font-weight: 700 !important;
+              }
+            }
+          }
+          td.today {
+            div {
+              .cell {
+                font-weight: normal;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .popper__arrow {
+    border-color: transparent !important;
+  }
+  .popper__arrow::after {
+    border-bottom-color: transparent !important;
+  }
+}
+
+.el-select-dropdown__list {
+  max-height: 175px;
+  overflow-y: auto;
+}
+
+.roleSelect{
+  .el-scrollbar__wrap--hidden-default::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #038585;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track{
+    background:#f5f7fa;
+  }
+  ::-webkit-scrollbar-corner{
+    background:#f5f7fa;
+  }
 }

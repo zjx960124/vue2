@@ -4,6 +4,63 @@
 @import './element-ui.scss';
 @import './sidebar.scss';
 
+@media (max-width: 1280px) {
+  html {
+    font-size: 66.66666px;
+  }
+}
+
+@media (min-width: 1366px) {
+  html {
+    //font-size: 38.082px;
+    font-size: 71.145833px;
+    //font-size: calc(100vw/1920 + 0px);
+  }
+}
+
+@media (min-width: 1440px) {
+  html {
+    font-size: 75px;
+  }
+}
+
+@media (min-width: 1600px) {
+  html {
+    //font-size: 49.296px;
+    font-size: 83.333333px;
+  }
+}
+
+@media (min-width: 1680px) {
+  html {
+    //font-size: 49.296px;
+    font-size: 87.5px;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 100px;
+  }
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 133.333px;
+  }
+}
+
+@media (min-width: 3408px) {
+  html {
+    font-size: 177.5px;
+  }
+}
+
+
+@function px2rem($px) {
+  @return $px/100+rem;
+}
+
 body {
     height: 100%;
     -moz-osx-font-smoothing: grayscale;
@@ -23,12 +80,16 @@ html {
 
 #app {
     height: 100%;
+  //height: 1080px;
 }
 
 *,
 *:before,
 *:after {
     box-sizing: inherit;
+  //box-sizing: border-box;
+  //-moz-box-sizing: border-box;
+  //-webkit-box-sizing: border-box;
 }
 
 a:focus,
@@ -64,6 +125,18 @@ div:focus {
     padding: 20px;
 }
 
-#nprogress .bar {
-    background: #409CFF !important; //自定义颜色
+
+/* ::-webkit-scrollbar ,兼容chrome和safari浏览器 */
+.inner-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 兼容火狐 */
+.inner-container {
+  scrollbar-width: none;
+}
+
+/* 兼容IE10+ */
+.inner-container {
+  -ms-overflow-style: none;
 }

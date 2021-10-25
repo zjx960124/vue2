@@ -1,4 +1,16 @@
 // echart通用模板
+const fitChartSize = (size, defalteWidth = 1920) => {
+  let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  if (!clientWidth) return size;
+  let scale = (clientWidth / defalteWidth);
+  return Number((size*scale).toFixed(3));
+}
+const fitChartHeight = (size, defalteHeight = 1080) => {
+  let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  if (!clientHeight) return size;
+  let scale = (clientHeight / defalteHeight);
+  return Number((size*scale).toFixed(3));
+}
 export var EChartCommon = {
 
   /* 默认主题文字设置*/
@@ -7,9 +19,9 @@ export var EChartCommon = {
       text: chartTitle,
       subtext: subtext || '',
       textStyle: { // 正标题文字样式
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: 500,
-        color: '#303133',
+        color: 'getDefaultChartTitle',
         lineHeight: 20,
         fontFamily: 'PingFangSC-Medium,sans-serif'
       },
@@ -20,40 +32,45 @@ export var EChartCommon = {
         lineHeight: 20,
         fontFamily: 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif'
       },
-      left: 0,
-      top: 0
+      left: 'left',
+      top: 'top'
     }
   },
 
   /* 默认饼环图主题文字设置*/
-  getDefaultCircularPieChartTitle: function (chartTitle, subtext) {
+  getDefaultCircularPieChartTitle: function (chartTitle, subtext, titleTop, titleLeft, titleBottom, titleRight) {
     return {
       text: chartTitle,
       subtext: subtext || '',
-      itemGap: 10,
+      itemGap: fitChartSize(10),
+      padding: [0, 0, 0, 0],
       textStyle: {
-        width: 120,
-        fontSize: 14,
-        color: 'rgba(255,255,255,0.65)',
+        width: 220,
+        fontSize: fitChartSize(12),
+        color: '#A7C7C7',
         fontWeight: 400,
         lineHeight: 20,
         fontFamily: 'PingFangSC-Medium,sans-serif',
         overflow: 'truncate'
-
       },
       subtextStyle: {
         width: 120,
-        fontSize: 20,
+        fontSize: fitChartSize(12),
         fontWeight: 400,
         color: '#ffffff',
         lineHeight: 20,
         fontFamily: 'Roboto-Regular',
         overflow: 'truncate'
-
       },
       textAlign: 'center',
-      left: '175',
-      top: '80'
+      /*left: fitChartSize(titleLeft),
+      top: fitChartHeight(titleTop),
+      right: fitChartSize(titleRight),
+      bottom: fitChartHeight(titleBottom)*/
+      left: titleLeft,
+      top: titleTop,
+      right: titleRight,
+      bottom: fitChartHeight(titleBottom)
     }
   },
 
@@ -142,14 +159,16 @@ export var EChartCommon = {
   getDefaultPieTooltip: function (customTip) {
     return {
       trigger: 'item',
+      transitionDuration: 0,
       confine: true,
-      formatter: customTip || '{a} <br/>{b} : {c} ({d}%)'
+      formatter: customTip || '{b} : {c} ({d}%)'
     }
   },
 
   getDefaultLineTooltip: function () {
     return {
       trigger: 'axis',
+      transitionDuration: 0,
       axisPointer: {
         type: 'cross',
         crossStyle: {
@@ -176,6 +195,7 @@ export var EChartCommon = {
     return {
       trigger: 'axis',
       confine: true,
+      transitionDuration: 0,
       axisPointer: {
         type: 'none'
       }
@@ -278,21 +298,90 @@ export var EChartCommon = {
   },
 
   /* 设置底部图例过多可滚动*/
-  getDefaultBottomScrollLegend: function (dataLegend, bottom = 0) {
+  getDefaultBottomScrollLegend: function (dataLegend, top, right, bottom = 0) {
+    if (dataLegend.length < 1) return {};
+    let dataLegendSeries = [];
+    dataLegend.forEach((item, index) => {
+      if (item.data instanceof Array) {
+        dataLegendSeries.push({
+          orient: 'horizontal',
+          type: 'scroll',
+          bottom: fitChartSize(item.bottom) || fitChartSize(bottom) || 0,
+          itemHeight: fitChartSize(5),
+          itemWidth: fitChartSize(5),
+          itemGap: fitChartSize(25),
+          icon: 'rect',
+          selectedMode: true,
+          textStyle: {
+            padding: [0, 0, 0, 2],
+            color: '#677A7A',
+            fontWeight: '500',
+            fontSize: fitChartSize(11),
+            fontFamily: 'DINPro-Medium, PingFang SC, sans-serif'
+          },
+          tooltip: {
+            show: true
+          },
+          borderRadius: 0,
+          pageIconColor: '#303133',
+          pageIconInactiveColor: 'transparent',
+          pageTextStyle: {
+            color: '#303133'
+          },
+          data: item.data
+        })
+      } else {
+        dataLegendSeries = {
+          orient: 'horizontal',
+          type: 'scroll',
+          bottom: fitChartSize(bottom) || 0,
+          itemHeight: fitChartSize(5),
+          itemWidth: fitChartSize(5),
+          itemGap: fitChartSize(25),
+          icon: 'rect',
+          selectedMode: true,
+          textStyle: {
+            padding: [0, 0, 0, 2],
+            color: '#677A7A',
+            fontSize: fitChartHeight(11),
+            fontWeight: '500',
+            fontFamily: 'DINPro-Medium, PingFang SC, sans-serif'
+          },
+          tooltip: {
+            show: true
+          },
+          borderRadius: 0,
+          pageIconColor: '#303133',
+          pageIconInactiveColor: 'transparent',
+          pageTextStyle: {
+            color: '#303133'
+          },
+          data: dataLegend
+        }
+      }
+    });
+    return dataLegendSeries;
+  },
+
+  /* 设置右侧图例过多可滚动*/
+  getDefaultRightScrollLegend: function (dataLegend, legendTop, legendRight) {
     return {
-      orient: 'horizontal',
+      orient: 'vertical',
       type: 'scroll',
-      bottom: bottom || 0,
-      itemHeight: 8,
-      itemWidth: 8,
-      itemGap: 10,
-      icon: 'rect',
       selectedMode: true,
+      right: fitChartSize(legendRight),
+      top: fitChartHeight(legendTop),
+      bottom: 0,
+      itemHeight: fitChartSize(8),
+      itemWidth: fitChartSize(8),
+      itemGap: fitChartSize(12),
+      icon: 'rect',
       textStyle: {
         padding: [0, 0, 0, 2],
-        color: '#303133',
-        fontSize: 12,
-        fontFamily: 'PingFangSC-Regular,sans-serif'
+        color: '#677A7A',
+        fontWeight: 500,
+        fontSize: fitChartSize(11),
+        fontFamily: 'DIN-MEDIUM,sans-serif'
       },
       tooltip: {
         show: true
@@ -307,40 +396,42 @@ export var EChartCommon = {
     }
   },
 
-  /* 设置右侧图例过多可滚动*/
-  getDefaultRightScrollLegend: function (dataLegend) {
+  /* 设置左图例过多可滚动*/
+  getDefaultLeftScrollLegend: function (dataLegend, top = 30, left = 0) {
     return {
       orient: 'vertical',
       type: 'scroll',
       selectedMode: true,
-      right: 0,
-      top: 30,
+      left: left,
+      top: top,
       bottom: 0,
-      itemHeight: 8,
-      itemWidth: 8,
-      itemGap: 10,
+      itemWidth: fontSize(12),
+      itemHeight: fontSize(12),
+      itemGap: fontSize(10),
       icon: 'rect',
       textStyle: {
         padding: [0, 0, 0, 2],
-        color: '#303133',
-        fontSize: 12,
-        fontFamily: 'PingFangSC-Regular,sans-serif'
+        color: '#ffffff',
+        fontSize: fontSize(24),
+        fontWeight: 'bold',
+        fontFamily: 'SourceHanSansCN-Regular,sans-serif'
       },
       tooltip: {
         show: true
       },
       borderRadius: 0,
-      pageIconColor: '#303133',
+      pageIconColor: '#00CDE5',
       pageIconInactiveColor: 'transparent',
+      pageIconSize: 12,
       pageTextStyle: {
-        color: '#303133'
+        color: '#00CDE5'
       },
       data: dataLegend
     }
   },
 
   // 设置默认区域数据缩放组件
-  getDefaultDataZoom: function (start, end, nameArray) {
+  getDefaultDataZoom: function (start, end, nameArray, bottom = 0) {
     var zArray = []
     nameArray.forEach(item => {
       zArray.push({
@@ -348,7 +439,7 @@ export var EChartCommon = {
         type: 'slider',
         realtime: true,
         height: 8, // 组件高度
-        bottom: 10,
+        bottom: bottom,
         textStyle: {
           color: '#303133',
           fontSize: 12,
@@ -372,14 +463,14 @@ export var EChartCommon = {
     return zArray
   },
 
-  getDefaultBarXAxis: function (xData, rotate) {
+  getDefaultBarXAxis: function (xData, rotate, axisLineFlag) {
     return [{
       type: 'category',
       axisTick: {
         show: false
       },
       axisLabel: EChartCommon.getDefaultAxisLabel(rotate),
-      axisLine: EChartCommon.getDefaultAxisLine(true),
+      axisLine: EChartCommon.getDefaultAxisLine(axisLineFlag),
       data: xData
     }]
   },
@@ -391,7 +482,7 @@ export var EChartCommon = {
         show: false
       },
       axisLabel: EChartCommon.getDefaultAxisLabel(rotate),
-      axisLine: EChartCommon.getDefaultAxisLine(),
+      axisLine: EChartCommon.getDefaultAxisLine(true),
       data: xData
     }]
   },
@@ -403,20 +494,21 @@ export var EChartCommon = {
       interval: 0, // {number}
       margin: 8,
       textStyle: {
-        color: '#303133',
-        fontSize: 12,
+        color: '#677A7A',
+        fontSize: fitChartSize(11),
         fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontFamily: 'PingFangSC-Regular,sans-serif'
+        fontWeight: '500',
+        fontFamily: 'DIN-MEDIUM, sans-serif'
       }
     }
   },
 
   getDefaultAxisLine: function (show = true) {
     return {
+      show: show,
       lineStyle: {
         show: show,
-        color: '#d2d2d2',
+        color: '#001414',
         width: 1
       }
     }
@@ -439,7 +531,7 @@ export var EChartCommon = {
     }
   },
 
-  getDefaultBarYAxis: function (nameArray) {
+  getDefaultBarYAxis: function (nameArray, namesPadding, showYAxisSplitLine) {
     var yArray = []
     nameArray.forEach((item, index) => {
       yArray.push({
@@ -447,6 +539,7 @@ export var EChartCommon = {
         name: item,
         offset: 0,
         splitNumber: 5,
+        boundaryGap: ['0%', '0%'],
         nameTextStyle: {
           color: '#303133',
           fontSize: 12,
@@ -454,11 +547,11 @@ export var EChartCommon = {
         },
         axisLabel: EChartCommon.getDefaultAxisLabel(),
         splitLine: {
-          show: index == 0,
+          show: index == 0 && showYAxisSplitLine,
           lineStyle: {
-            type: 'dashed',
+            type: 'solid',
             width: 1,
-            color: '#ebeef5'
+            color: '#001414'
           }
         },
         axisTick: {
@@ -466,7 +559,8 @@ export var EChartCommon = {
         },
         axisLine: {
           lineStyle: {
-            color: '#d2d2d2',
+            // color: '#d2d2d2',
+            color: 'rgba(0,0,0,0)',
             width: 1
           }
         }
@@ -492,9 +586,8 @@ export var EChartCommon = {
         splitLine: {
           show: index == 0,
           lineStyle: {
-            type: 'dashed',
             width: 1,
-            color: '#ebeef5'
+            color: '#001414'
           }
         },
         axisTick: {
@@ -502,7 +595,7 @@ export var EChartCommon = {
         },
         axisLine: {
           lineStyle: {
-            color: '#d2d2d2',
+            color: 'rgba(0, 0, 0, 0)',
             width: 1
           }
         }
@@ -532,10 +625,10 @@ export var EChartCommon = {
 
   getCustomBarGrid: function (x, y, x2, y2) {
     return {
-      x: x,
-      y: y,
-      x2: x2,
-      y2: y2,
+      x: fitChartSize(x),
+      y: fitChartHeight(y),
+      x2: fitChartSize(x2),
+      y2: fitChartHeight(y2),
       borderWidth: 1,
       containLabel: true
     }
@@ -601,13 +694,13 @@ export var EChartCommon = {
     }
   },
 
-  getDefaultHorizontalBarYAxis: function (data, yAxisName = '') {
+  getDefaultHorizontalBarYAxis: function (data, shwoAxisLine, yAxisName = '') {
     return [{
       type: 'category',
       name: yAxisName,
       nameTextStyle: {
         color: '#303133',
-        fontSize: 12,
+        fontSize: fitChartSize(12),
         fontFamily: 'PingFangSC-Regular,sans-serif'
       },
       data: data,
@@ -617,15 +710,22 @@ export var EChartCommon = {
       },
       axisLabel: {
         show: true,
+        margin: 0,
+        fontSize: fitChartSize(10),
+        fontFamily: 'PingFangSC-Regular,sans-serif',
         textStyle: {
-          color: '#303133',
-          fontSize: 12,
+          color: '#677A7A',
+          fontSize: fitChartSize(10),
+          verticalAlign: 'middle',
+          align: 'right',
           fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontFamily: 'PingFangSC-Regular,sans-serif'
-        }
+          fontWeight: 'bold',
+          fontFamily: 'PingFangSC-Regular,sans-serif',
+          padding: [0, 0, 0, fitChartSize(25)]
+        },
       },
       axisLine: {
+        show: shwoAxisLine,
         lineStyle: {
           color: '#d2d2d2',
           width: 1
@@ -716,35 +816,37 @@ export var EChartCommon = {
     return [obj]
   },
 
-  getDefaultHorizontalBarXAxis: function (rotate) {
+  getDefaultHorizontalBarXAxis: function (rotate, shwoXAxisSplitLine, shwoXAxisLine, showXAxisLabel) {
     return [{
       type: 'value',
       axisLabel: {
-        show: true,
+        show: showXAxisLabel,
         rotate: rotate || 0, // 倾斜度 -90 至 90 默认为0
+        margin: 0,
         textStyle: {
-          color: '#303133',
-          fontSize: 12,
+          color: '#677A7A',
+          fontSize: fitChartSize(11),
           fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontFamily: 'Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif'
+          fontWeight: 'bold',
+          fontFamily: 'DIN-Medium'
         }
       },
       axisTick: {
         show: false
       },
       axisLine: {
+        show: shwoXAxisLine,
         lineStyle: {
           color: '#d2d2d2',
           width: 1
         }
       },
       splitLine: {
-        show: true,
+        show: shwoXAxisSplitLine,
         lineStyle: {
-          type: 'dashed',
+          type: 'solid',
           width: 1,
-          color: '#ebeef5'
+          color: '#001414'
         }
       }
     }]
@@ -948,5 +1050,45 @@ export var EChartCommon = {
       },
       z: 100
     }
-  }
+  },
+
+  getValueDataZoom: function (nameArray, bottom = 10, startValue, endValue) {
+    var zArray = []
+    nameArray.forEach((item, index) => {
+      zArray.push({
+        show: true,
+        type: 'slider',
+        realtime: true,
+        height: fontSize(8), // 组件高度
+        bottom: bottom,
+        textStyle: {
+          color: '#fff',
+          fontSize: fontSize(18),
+          fontStyle: 'normal',
+          fontWeight: 'normal'
+        },
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        fillerColor: '#00CDE5',
+        borderColor: '#00CDE5',
+        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+        filterMode: 'filter',
+        handleSize: fontSize(20), // 滑动条的 左右2个滑动条的大小
+        handleColor: '#00CDE5', // h滑动图标的颜色
+        handleStyle: {
+          color: '#fff'
+        },
+        startValue: startValue,
+        endValue: endValue
+      })
+    })
+    return zArray
+  },
+}
+
+function fontSize(res) {
+  const clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+  if (!clientWidth) return
+  const fontSize = 100 * (clientWidth / 3408)
+  const result = (res / 100) * fontSize
+  return result
 }

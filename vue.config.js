@@ -19,7 +19,7 @@ const port = process.env.port || process.env.npm_config_port || 9524 // dev port
 
 module.exports = {
     publicPath: process.env.VUE_APP_PUBLIC_PATH,
-    outputDir: 'lapp-paas',
+    outputDir: 'build',
     assetsDir: 'static',
     lintOnSave: process.env.NODE_ENV === 'development',
     productionSourceMap: false,
@@ -34,7 +34,6 @@ module.exports = {
             '/rest': {
                 target: process.env.VUE_APP_BASE_API,
                 changeOrigin: true, // 是否跨域
-                secure: false,
                 pathRewrite: {
                     "^/rest": "/rest"
                 }

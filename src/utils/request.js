@@ -34,7 +34,7 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code !== '200') {
       if (res.code === '302') {
-        login()
+        login();
         return
       }
       Message({

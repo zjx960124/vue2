@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'init项目',
+  title: '福建建筑学院',
 
   /**
    * @type {boolean} true | false

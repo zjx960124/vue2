@@ -46,3 +46,38 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+  font-family: 'DIN-BLACK';
+  src: url('DIN-BLACK.OTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DIN-BOLD';
+  src: url('DIN-BOLD.OTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DIN-LIGHT';
+  src: url('DIN-LIGHT.OTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DIN-MEDIUM';
+  src: url('DIN-MEDIUM.OTF');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PMZD';
+  src: url('PMZD.TTF');
+  font-weight: normal;
+  font-style: normal;
+}

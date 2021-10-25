@@ -8,6 +8,7 @@ import VueContextMenu from 'vue-contextmenu'
 import vuescroll from 'vuescroll'
 import VueClipboard from 'vue-clipboard2'
 import Print from 'vue-print-nb'
+import scroll from 'vue-seamless-scroll'
 
 
 import '@/styles/index.scss'
@@ -29,6 +30,7 @@ import Tinymce from '@/components/tinymce/index.vue'
 import pinyin from 'js-pinyin'
 
 import formCreate from '@form-create/element-ui'
+import FcDesigner from '@form-create/designer'
 
 import {
   sameKeySetValue,
@@ -39,13 +41,38 @@ import {
   processingImgUrl
 } from '@/utils/common'
 
+import fontSize from '@/utils/css'
+
+import FormBuild from './views/first/formBuilds';
+
 Vue.prototype.pinyin = pinyin
 Vue.prototype.globalData = globalVariable
 Vue.prototype.sameKeySetValue = sameKeySetValue
 Vue.prototype.isEmpty = isEmpty
 Vue.prototype.filterParams = filterParams
 Vue.prototype.processingImgUrl = processingImgUrl
+Vue.prototype.fontSize = fontSize;
 VueClipboard.config.autoSetContainer = true
+
+Vue.filter('locale', function (val) {
+  return Number.isFinite(val) ? val.toLocaleString('zh', { style: 'decimal' }) : 0;
+})
+
+const fitChartSize = (size, defalteWidth = 1920) => {
+  let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  if (!clientWidth) return size;
+  let scale = (clientWidth / defalteWidth);
+  return Number((size*scale).toFixed(3));
+}
+const fitChartHeight = (size, defalteHeight = 1080) => {
+  let clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+  if (!clientHeight) return size;
+  let scale = (clientHeight / defalteHeight);
+  return Number((size*scale).toFixed(3));
+}
+
+Vue.prototype.fitChartSize = fitChartSize;
+Vue.prototype.fitChartHeight = fitChartHeight;
 
 Vue.use(ElementUI)
 Vue.use(VueContextMenu)
@@ -53,7 +80,9 @@ Vue.use(vuescroll)
 Vue.use(VueClipboard)
 Vue.use(Print)
 Vue.use(formCreate)
-
+Vue.use(FcDesigner)
+Vue.use(FormBuild)
+Vue.use(scroll)
 
 Vue.component('PageForm', PageForm)
 Vue.component('PageTable', PageTable)
