@@ -155,6 +155,7 @@
             <div
               class="item"
               v-for="(item, index) in bxgm1"
+              :key="index"
             >
               <div class="item-icon"></div>
               <div class="item-info">
@@ -167,6 +168,7 @@
             <div
               class="item"
               v-for="(item, index) in bxgm2"
+              :key="index"
             >
               <div class="item-icon"></div>
               <div class="item-info">
