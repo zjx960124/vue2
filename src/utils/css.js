@@ -9,4 +9,4 @@ const fontSize = function (res) {
   return result
 }
 
-export default fontSize;
+export default fontSize

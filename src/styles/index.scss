@@ -1,8 +1,8 @@
 @import './variables.scss';
 @import './mixin.scss';
-@import './transition.scss';
 @import './element-ui.scss';
-@import './sidebar.scss';
+//@import './transition.scss;
+//@import './sidebar.scss';
 
 @media (max-width: 1280px) {
   html {
@@ -76,6 +76,7 @@ label {
 html {
     height: 100%;
     box-sizing: border-box;
+    scrollbar-width: thin;
 }
 
 #app {
@@ -83,10 +84,17 @@ html {
   //height: 1080px;
 }
 
+* {
+  font-family: PingFangSC-Medium;
+}
+
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: inherit;
   //box-sizing: border-box;
   //-moz-box-sizing: border-box;
   //-webkit-box-sizing: border-box;
@@ -139,4 +147,50 @@ div:focus {
 /* 兼容IE10+ */
 .inner-container {
   -ms-overflow-style: none;
+}
+
+
+@media print {
+  @page {
+    margin: 0;
+  }
+  //body {
+  //  margin: 1cm;
+  //}
+}
+
+[class^='icon-yx-'], [class*='icon-yx-'] {
+  font-family: 'iconfont' !important;
+  font-size: 14px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+i[class^='icon-yx-ss'] {
+  font-size: 12px;
+}
+
+/**
+  滚动条
+ */
+html {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  scrollbar-width: inherit;
+}
+
+// 伪元素无法继承
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #D3D3E4;
+  border-radius: 4px;
 }

@@ -8,9 +8,11 @@ import {
 import {
   login
 } from '@/utils/index.js'
+import { logint } from '@/api/user'
+import store from '@/store'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: process.env.VUE_APP_BASE_API,
   withCredentials: true,
   timeout: 15000
 })
@@ -36,6 +38,14 @@ service.interceptors.response.use(
       if (res.code === '302') {
         login();
         return
+      }
+      if (res.code === '500') {
+        // logint({userName: 'bee', password: 'hy1234'}).then((res) => {
+        //   store.dispatch('info/setDept');
+        // })
+        // return res
+        // this.$router.push('/login')
+        return 
       }
       Message({
         message: res.msg || '请求失败,请重试',

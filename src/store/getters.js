@@ -13,5 +13,6 @@ const getters = {
   appAttributeInfo: state => state.info.appAttributeInfo,
   appId: state => state.info.appId,
   appCode: state => state.info.appCode,
+  dept: state => state.info.dept
 }
 export default getters

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '福建建筑学院',
+  title: '迎新缴费后台管理系统',
 
   /**
    * @type {boolean} true | false

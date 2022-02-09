@@ -1,8 +1,11 @@
+import {getDeptList} from '@/api/base'
+
 const state = {
   appAttributeInfo: null,
   appId: '',
   appCode: '',
-  device: ''
+  device: '',
+  dept: []
 }
 
 const mutations = {
@@ -22,6 +25,10 @@ const mutations = {
   },
   SETDEVICE: (state, device) => {
     state.device = device
+  },
+  SETDEPT: (state, dept) => {
+    state.dept = dept
+    console.log(state.dept);
   }
 }
 
@@ -37,6 +44,17 @@ const actions = {
   },
   setDevice({ commit }, data) {
     commit('SETDEVICE', data)
+  },
+  setDept( { commit }, state) {
+    return new Promise((resolve, reject) => {
+      getDeptList().then((res) => {
+        console.log(res);
+        commit('SETDEPT', res.data);
+        resolve(res.data);
+      }).catch((err) => {
+        reject();
+      })
+    })
   }
 }
 

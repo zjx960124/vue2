@@ -1,0 +1,72 @@
+{
+  "id": "3148280",
+  "name": "yx",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-yx-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "27286600",
+      "name": "sousuo-15",
+      "font_class": "ss",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "27285964",
+      "name": "jia-7",
+      "font_class": "jia",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "27285965",
+      "name": "fanhui ",
+      "font_class": "fanhui",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "27285966",
+      "name": "jian_icon",
+      "font_class": "jian",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "27285967",
+      "name": "tijiao",
+      "font_class": "tijiao",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "27285968",
+      "name": "sousuo ",
+      "font_class": "sousuo",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "27285969",
+      "name": "shuaxin",
+      "font_class": "shuaxin",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "27285970",
+      "name": "xiala",
+      "font_class": "xiala",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "27285971",
+      "name": "chongzhi",
+      "font_class": "chongzhi",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    }
+  ]
+}

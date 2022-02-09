@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="12">
+  <el-row :gutter="0">
     <el-form
       ref="form"
       class="pf-form"
@@ -13,14 +13,18 @@
     >
       <template v-for="field in modelFields">
         <el-col
-          v-if="!field.hidden"
+          v-if="
+            !field.hidden &&
+            model.hasOwnProperty(field.key) &&
+            hasPrecondition(field)
+          "
           :key="field.key"
           :span="field.colSpan || colSpan || 12"
         >
           <slot :name="`item-${field.key}`" :field="field" :model="model">
             <page-form-item
               :field="field"
-              :label-width="labelWidth"
+              :label-width="field.labelWidth || labelWidth"
               :size="size"
               :model="model"
               :disabled="disabled"
@@ -52,12 +56,12 @@ export default {
     /* label对齐方式 "left" "right" "top"*/
     labelPosition: {
       type: String,
-      default: 'right'
+      default: 'left'
     },
     /* 宽度*/
     colSpan: {
       type: Number,
-      default: 12
+      default: 24
     },
     inline: {
       type: Boolean,
@@ -69,7 +73,7 @@ export default {
     },
     labelWidth: {
       type: [Number, String],
-      default: '100'
+      default: '120px'
     },
     disabled: {
       type: Boolean,
@@ -176,6 +180,13 @@ export default {
     },
     chooseImgCallBack(imgUrl, field, fieldKey, model) {
       this.$emit('chooseImgCallBack', imgUrl, field, fieldKey, model)
+    },
+    hasPrecondition(field) {
+      if (field.hasOwnProperty('precondition')) {
+        return this.model[field['precondition']]
+      } else {
+        return true
+      }
     }
   }
 }

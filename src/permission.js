@@ -9,6 +9,7 @@ import getPageTitle from '@/utils/get-page-title'
 import {
   setPv
 } from './utils/set-pv-uv'
+import state from './layouts/store'
 
 NProgress.configure({
   showSpinner: false
@@ -48,7 +49,9 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to, from, next) => {
   NProgress.done()
   const username = store.getters.username
-  if (username) {
+  state.changeActive(to.fullPath.split('/')[2]);
+  //  tool pv
+  /*if (username) {
     setPv(username, store.getters.roleCodesString, store.getters.roleNamesString, to.path, to.meta.title)
-  }
+  }*/
 })

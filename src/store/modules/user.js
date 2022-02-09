@@ -80,7 +80,7 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       var params = {
-        appCode: 'lapp-paas'
+        appCode: 'enrollment'
       }
       getInfo(params).then(response => {
         const {

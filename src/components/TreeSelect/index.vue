@@ -46,7 +46,6 @@
         :show-checkbox="multiple"
         :node-key="nodeKey"
         :check-strictly="checkStrictly"
-        :default-expanded-keys="defaultKeys"
         :expand-on-click-node="multiple && expandClickNode"
         :check-on-click-node="checkClickNode"
         :highlight-current="highlightCurrent"
@@ -82,7 +81,8 @@
           size="mini"
           type="text"
           @click="isShowSelect = false"
-        >确定</el-button>
+          >确定</el-button
+        >
       </el-row>
     </el-popover>
   </div>
@@ -204,6 +204,12 @@ export default {
       default() {
         return false
       }
+    },
+    onlyLast: {
+      type: Boolean,
+      default() {
+        return false
+      }
     }
   },
   // 上面是父组件可传入参数
@@ -276,11 +282,11 @@ export default {
           // 单选
           if (
             Object.prototype.toString.call(this.defaultKey).indexOf('Number') !=
-              -1 ||
+            -1 ||
             Object.prototype.toString.call(this.defaultKey).indexOf('String') !=
-              -1 ||
+            -1 ||
             Object.prototype.toString.call(this.defaultKey).indexOf('Object') !=
-              -1
+            -1
           ) {
             this.setKey(this.defaultKey)
           } else {
@@ -302,6 +308,11 @@ export default {
     // 单选: 树点击方法
     nodeClick(data, node) {
       if (!this.multiple) {
+        if (this.onlyLast && !!data.children && data.children.length > 0) {
+          console.log("有子节点不可选")
+          this.$refs.tree.store.nodesMap[data[this.nodeKey]].expanded = true;
+          return false;
+        }
         // 单选
         this.isShowSelect = false
         this.setKey(node.key)
@@ -324,15 +335,17 @@ export default {
     // 单选:清空选中
     clean() {
       this.$refs.tree.setCurrentKey(null) // 清除树选中key
-      this.returnDatas = null
-      this.returnDataKeys = ''
+      this.returnDatas = null;
+      this.returnDataKeys = '';
       this.popoverHide()
     },
     // 单选:设置、初始化值 key
     setKey(thisKey) {
-      this.$refs.tree.setCurrentKey(thisKey)
-      var node = this.$refs.tree.getNode(thisKey)
-      this.setData(node.data)
+      this.$nextTick(() => {
+        this.$refs.tree.setCurrentKey(thisKey)
+        var node = this.$refs.tree.getNode(thisKey)
+        node && this.setData(node.data)
+      })
     },
     // 单选：设置、初始化对象
     setData(data) {
@@ -341,6 +354,7 @@ export default {
         label: data[this.props.label],
         value: data[this.props.id]
       })
+      console.log(data);
       this.returnDatas = data
       this.returnDataKeys = data[this.props.id]
     },
@@ -386,7 +400,7 @@ export default {
     },
     // 下拉框关闭执行
     popoverHide() {
-      this.$emit('getValue', this.returnDataKeys, this.returnDatas)
+      this.$emit('getValue', this.returnDatas, this.returnDataKeys)
     },
     // 多选，清空所有勾选
     clearSelectedNodes() {

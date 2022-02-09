@@ -1,183 +1,185 @@
 <template>
   <div class="page-table">
-    <el-table
-      ref="table"
-      v-loading="loading"
-      :data="data"
-      :fit="fit"
-      :border="border"
-      :element-loading-text="elementLoadingText"
-      :element-loading-spinner="elementLoadingSpinner"
-      :row-class-name="rowClassName"
-      :cell-class-name="cellClassName"
-      :max-height="maxHeight"
-      :default-sort="defaultSort"
-      :default-expand-all="defaultExpandAll"
-      :class="limit ? 'limitHeight' : 'auto'"
-      style="width: 100%"
-      :height="tableHeight"
-      :row-key="rowKey"
-      :highlight-current-row="highlightCurrentRow"
-      :reserve-selection="reserveSelection"
-      :tree-props="treeProps"
-      :lazy="lazy"
-      :load="loadData"
-      @selection-change="handleSelectionChange"
-      @select="select"
-      @select-all="selectAll"
-      @row-click="rowClick"
-      @row-dblclick="rowDbClick"
-      @filter-change="filterChange"
-      @sort-change="sortChange"
-      @current-change="handleCurrentChange"
-    >
-      <el-table-column
-        v-if="type != 'index'"
-        :type="type"
-        :align="align"
-        :width="selectionWidth"
-        :selectable="selectableFunc"
-        label
-      />
-      <el-table-column
-        v-if="showNo"
-        type="index"
-        align="center"
-        :width="80"
-        label="序号"
-        :index="tableIndex"
-      />
-      <template v-for="(field, index) in tableHeader">
+    <div class="table-view">
+      <el-table
+        ref="table"
+        v-loading="loading"
+        :data="data"
+        :fit="fit"
+        :border="border"
+        :element-loading-text="elementLoadingText"
+        :element-loading-spinner="elementLoadingSpinner"
+        :row-class-name="rowClassName"
+        :cell-class-name="cellClassName"
+        :max-height="maxHeight"
+        :default-sort="defaultSort"
+        :default-expand-all="defaultExpandAll"
+        :class="limit ? 'limitHeight' : 'auto'"
+        style="width: 100%"
+        :row-key="rowKey"
+        :highlight-current-row="highlightCurrentRow"
+        :reserve-selection="reserveSelection"
+        :tree-props="treeProps"
+        :lazy="lazy"
+        :load="loadData"
+        @selection-change="handleSelectionChange"
+        @select="select"
+        @select-all="selectAll"
+        @row-click="rowClick"
+        @row-dblclick="rowDbClick"
+        @filter-change="filterChange"
+        @sort-change="sortChange"
+        @current-change="handleCurrentChange"
+      >
         <el-table-column
-          v-if="!field.formatter && !field.hidden"
-          :key="index"
+          v-if="type != 'index'"
+          :type="type"
           :align="align"
-          :fixed="field.fixed"
-          :label="field.name"
-          :prop="field.key"
-          :column-key="field.key"
-          :sortable="field.sortable || false"
-          :filters="field.filters"
-          :width="field.width || 'auto'"
-          :min-width="field.minWidth"
+          :width="selectionWidth"
+          :selectable="selectableFunc"
+        />
+        <el-table-column
+          v-if="showNo"
+          type="index"
+          align="center"
+          :width="80"
+          label="序号"
+          :index="tableIndex"
+        />
+        <template v-for="(field, index) in tableHeader">
+          <el-table-column
+            v-if="!field.formatter && !field.hidden"
+            :key="index"
+            :align="align"
+            :fixed="field.fixed"
+            :label="field.name"
+            :prop="field.key"
+            :column-key="field.key"
+            :sortable="field.sortable || false"
+            :filters="field.filters"
+            :width="field.width || 'auto'"
+            :min-width="field.minWidth"
+          >
+            <template slot-scope="scope">
+              <!-- 图片 -->
+              <template v-if="field.isImg">
+                <el-image
+                  v-if="scope.row[field.key]"
+                  class="tableCellImg"
+                  :src="scope.row[field.key]"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline" />
+                  </div>
+                </el-image>
+                <i v-else class="el-icon-picture-outline" />
+              </template>
+              <!-- 插槽 -->
+              <slot
+                v-else-if="field.slot"
+                :name="field.slot"
+                :$index="scope.$index"
+                :row="scope.row"
+                :dataScope="scope"
+                :type="field.type"
+                :field="field"
+              />
+              <!-- 文字 -->
+              <template v-else>
+                <span v-if="scope.row[field.key]">{{
+                  scope.row[field.key]
+                }}</span>
+                <span v-else>-</span>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="!field.hidden && field.formatter"
+            :key="index"
+            :align="align"
+            :fixed="field.fixed"
+            :label="field.name"
+            :prop="field.key"
+            :column-key="field.key"
+            :sortable="field.sortable || true"
+            :filters="field.filters"
+            :width="field.width || 'auto'"
+            :min-width="field.minWidth || '50'"
+            :formatter="field.formatter"
+          />
+        </template>
+
+        <el-table-column
+          v-if="operation.length || showOperation"
+          label="操作"
+          :align="align"
+          :fixed="operationFixed"
+          :width="operationWidths ? operationWidths : operationWidth"
         >
           <template slot-scope="scope">
-            <!-- 图片 -->
-            <template v-if="field.isImg">
-              <el-image
-                v-if="scope.row[field.key]"
-                class="tableCellImg"
-                :src="scope.row[field.key]"
-              >
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline" />
-                </div>
-              </el-image>
-              <i v-else class="el-icon-picture-outline" />
-            </template>
-            <!-- 插槽 -->
-            <slot
-              v-else-if="field.slot"
-              :name="field.slot"
-              :$index="scope.$index"
-              :row="scope.row"
-              :dataScope="scope"
-              :type="field.type"
-              :field="field"
-            />
-            <!-- 文字 -->
-            <template v-else>
-              <span v-if="scope.row[field.key]">{{
-                scope.row[field.key]
-              }}</span>
-              <span v-else>-</span>
-            </template>
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="!field.hidden && field.formatter"
-          :key="index"
-          :align="align"
-          :fixed="field.fixed"
-          :label="field.name"
-          :prop="field.key"
-          :column-key="field.key"
-          :sortable="field.sortable || true"
-          :filters="field.filters"
-          :width="field.width || 'auto'"
-          :min-width="field.minWidth || '50'"
-          :formatter="field.formatter"
-        />
-      </template>
-
-      <el-table-column
-        v-if="operation.length || showOperation"
-        label="操作"
-        :align="align"
-        :fixed="operationFixed"
-        :width="operationWidths ? operationWidths : operationWidth"
-      >
-        <template slot-scope="scope">
-          <div class="operation">
-            <template v-for="(op, index) in operation">
-              <el-divider
-                v-if="index !== 0 && !op.hidden"
-                :key="op.key"
-                direction="vertical"
-              />
-              <el-button
-                v-if="
-                  operationShow(op, scope.row, scope.$index) &&
-                  !op.slot &&
-                  !op.hidden &&
-                  !op.hasPopconfirm
-                "
-                :key="op.key"
-                :type="op.type || 'text'"
-                :icon="op.icon"
-                :disabled="loadingButtons[`${scope.$index}-${op.key}`]"
-                :loading="loadingButtons[`${scope.$index}-${op.key}`]"
-                :size="op.size || 'mini'"
-                @click="hanldeOperation(op, scope.row, scope.$index, data)"
-                >{{ op.name }}</el-button
-              >
-
-              <el-popconfirm
-                v-if="
-                  operationShow(op, scope.row, scope.$index) &&
-                  !op.slot &&
-                  !op.hidden &&
-                  op.hasPopconfirm
-                "
-                :key="op.key"
-                :title="op.popTitle || '是否删除该条记录?'"
-                @confirm="hanldeOperation(op, scope.row, scope.$index, data)"
-              >
+            <div class="operation">
+              <template v-for="(op, index) in operation">
+                <el-divider
+                  v-if="index !== 0 && !op.hidden"
+                  :key="op.key"
+                  direction="vertical"
+                />
                 <el-button
-                  slot="reference"
-                  class="popconfirm-btn"
+                  v-if="
+                    operationShow(op, scope.row, scope.$index) &&
+                    !op.slot &&
+                    !op.hidden &&
+                    !op.hasPopconfirm
+                  "
+                  :key="op.key"
                   :type="op.type || 'text'"
                   :icon="op.icon"
                   :disabled="loadingButtons[`${scope.$index}-${op.key}`]"
                   :loading="loadingButtons[`${scope.$index}-${op.key}`]"
                   :size="op.size || 'mini'"
+                  :style="{ color: op.color || '' }"
+                  @click="hanldeOperation(op, scope.row, scope.$index, data)"
                   >{{ op.name }}</el-button
                 >
-              </el-popconfirm>
-              <!-- <el-divider
-                v-if="index !== operation.length - 1 && !op.hidden"
-                :key="op.key"
-                direction="vertical"
-              /> -->
-              <slot :name="op.slot" :$index="scope.$index" :row="scope.row" />
-              <slot :name="op.key" :$index="scope.$index" :row="scope.row" />
-            </template>
 
-            <slot name="operation" :$index="scope.$index" :row="scope.row" />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+                <el-popconfirm
+                  v-if="
+                    operationShow(op, scope.row, scope.$index) &&
+                    !op.slot &&
+                    !op.hidden &&
+                    op.hasPopconfirm
+                  "
+                  :key="op.key"
+                  :title="op.popTitle || '是否删除该条记录?'"
+                  @confirm="hanldeOperation(op, scope.row, scope.$index, data)"
+                >
+                  <el-button
+                    slot="reference"
+                    class="popconfirm-btn"
+                    :type="op.type || 'text'"
+                    :icon="op.icon"
+                    :disabled="loadingButtons[`${scope.$index}-${op.key}`]"
+                    :loading="loadingButtons[`${scope.$index}-${op.key}`]"
+                    :size="op.size || 'mini'"
+                    :style="{ color: op.color || '' }"
+                    >{{ op.name }}</el-button
+                  >
+                </el-popconfirm>
+                <!-- <el-divider
+                  v-if="index !== operation.length - 1 && !op.hidden"
+                  :key="op.key"
+                  direction="vertical"
+                /> -->
+                <slot :name="op.slot" :$index="scope.$index" :row="scope.row" />
+                <slot :name="op.key" :$index="scope.$index" :row="scope.row" />
+              </template>
+
+              <slot name="operation" :$index="scope.$index" :row="scope.row" />
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <div v-if="isPage && page.total > 0" class="paginationBox">
       <el-pagination
         :background="device !== 'mobile'"
@@ -222,7 +224,7 @@ export default {
     /* 对齐方式 left/center/right*/
     align: {
       type: String,
-      default: "left",
+      default: "center",
     },
     /* 最大高度*/
     maxHeight: {
@@ -235,7 +237,7 @@ export default {
     },
     selectionWidth: {
       type: Number,
-      default: 30,
+      default: 50,
     },
     selectableFunc: {
       type: Function,
@@ -480,7 +482,7 @@ export default {
     debounce(delay) {
       console.log(1111111);
       let that = this;
-      if(this.timer !== null) clearTimeout(this.timer);
+      if (this.timer !== null) clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         that.$emit("page-change")
       }, delay);
@@ -690,6 +692,7 @@ export default {
 <style lang="scss" scope>
 .page-table {
   width: 100%;
+  height: 100%;
   .tableCellImg {
     display: flex;
     align-items: center;
@@ -698,6 +701,10 @@ export default {
     height: auto;
     min-height: 40px;
     background-color: #f7f7f7;
+  }
+  .table-view {
+    height: calc(100% - 72px);
+    overflow-y: auto;
   }
 }
 
@@ -716,8 +723,43 @@ export default {
 }
 
 .paginationBox {
-  padding: 8px 0;
   overflow-x: auto;
+  height: 72px;
+  align-items: center;
+  overflow-y: hidden;
+  .el-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    .el-input__inner {
+      min-width: 0;
+      color: #9c9ab4;
+    }
+    .el-pagination__total {
+      color: #9c9ab4;
+      font-size: 14px;
+    }
+    .el-icon-arrow-up:before {
+      font-family: "iconfont";
+      content: "\e60f";
+    }
+    .el-pagination__jump {
+      color: #9c9ab4;
+      font-size: 14px;
+    }
+    .active {
+      background: #587dfd;
+    }
+    .el-pager li {
+      border-radius: 3px;
+      color: #9c9ab4;
+    }
+    .btn-next i,
+    .btn-prev i {
+      color: #9c9ab4;
+    }
+  }
 }
 
 .operation {
@@ -745,15 +787,15 @@ export default {
 
 .el-table .cell {
   font-size: 12px;
-  color: #9491B0;
+  color: #9491b0;
   .operation {
     text-align: center;
   }
 }
 .el-table__header thead tr th {
-  background-color: #ECEDF6;
+  background-color: #ecedf6;
   .cell {
-    color: #7F7B9F;
+    color: #7f7b9f;
   }
 }
 </style>

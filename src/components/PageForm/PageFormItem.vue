@@ -281,9 +281,10 @@
       <template v-else-if="field.type === 'treeSelect'">
         <tree-select
           v-if="!field.hidden"
+          ref="tree"
           v-model="model[fieldKey]"
-          :height="field.height || 400"
-          :width="field.width || 200"
+          :height="field.height || '400'"
+          :width="field.width || '200'"
           :size="size"
           :readonly="field.readonly"
           :disabled="field.disabled"
@@ -291,6 +292,8 @@
           :props="field.props"
           :multiple="field.multiple || false"
           :default-key="field.defaultKey"
+          :only-last="field.onlyLast"
+          :node-key="field.nodeKey"
           :clearable="field.props && field.props.clearable"
           :collapse-tags="field.props && field.props.collapseTags"
           :expand-click-node="field.props && field.props.expandClickNode"
@@ -319,6 +322,15 @@
           @focus="onInputFocus"
           @blur="onInputBlur"
         />
+      </template>
+      <!-- 颜色选择 -->
+      <template v-else-if="field.type === 'colorPicker'">
+        <el-color-picker
+          v-model="model[fieldKey]"
+          :disabled="field.disabled"
+          :show-alpha="field.showAlpha"
+        >
+        </el-color-picker>
       </template>
       <!-- 输入框-->
       <template v-else>
@@ -365,9 +377,9 @@ const datePickerType = [
   "daterange",
   "monthrange",
 ];
-import jsUpload from "@/components/JsUpload";
-import chooseImg from "@/components/common/selectPicture";
-import treeSelect from "@/components/TreeSelect";
+import jsUpload from "../JsUpload";
+import chooseImg from "../common/selectPicture";
+import treeSelect from "../TreeSelect";
 
 export default {
   components: { jsUpload, chooseImg, treeSelect },
@@ -454,6 +466,7 @@ export default {
      * @param value
      */
     hanldChange(value) {
+      console.log(value);
       if (this.field.change) {
         this.field.change(value, this.field, this.fieldKey, this.model);
       } else {
@@ -470,6 +483,7 @@ export default {
       this.$emit("input", value, this.field, this.fieldKey, this.model);
     },
     hanldCascaderChange(value) {
+      console.log(value);
       if (this.field.change) {
         this.field.change(value, this.field, this.fieldKey, this.model);
         // this.$refs.cascader.toggleDropDownVisible()
